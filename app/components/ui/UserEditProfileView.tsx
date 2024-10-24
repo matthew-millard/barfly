@@ -113,10 +113,14 @@ export default function UserEditProfileView({ currentPlaceOfWork }: UserProfileP
 							errors={currentPlaceOfWorkFields.startDate.errors}
 							errorId={currentPlaceOfWorkFields.startDate.errorId}
 							primaryColor="indigo"
-							startDate={{
-								startDate: dayjs(currentPlaceOfWork?.startDate).format('YYYY-MM-DD'),
-								endDate: dayjs(currentPlaceOfWork?.startDate).format('YYYY-MM-DD'),
-							}}
+							startDate={
+								currentPlaceOfWork?.startDate
+									? {
+											startDate: dayjs(currentPlaceOfWork?.startDate).format('YYYY-MM-DD'),
+											endDate: dayjs(currentPlaceOfWork?.startDate).format('YYYY-MM-DD'),
+										}
+									: undefined
+							}
 						/>
 					</div>
 					<div className="sm:col-span-3">

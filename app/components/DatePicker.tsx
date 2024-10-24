@@ -25,6 +25,7 @@ export default function DatePicker({
 	startDate,
 }: ReactDatePickerProps) {
 	const [value, setValue] = useState(() => {
+		console.log('startDate', startDate);
 		return startDate ?? { startDate: null, endDate: null };
 	});
 
