@@ -9,6 +9,8 @@ import { CurrentPlaceOfWorkSchema } from '~/components/ui/UserEditProfileView';
 import { prisma } from '~/utils/db.server';
 import { canadaMajorCities } from '~/utils/canada-data';
 import { z } from 'zod';
+import dayjs from 'dayjs';
+import { cleanUrl } from '~/utils/cleanUrl';
 
 export const updateCurrentPlaceOfWorkActionIntent = 'updateCurrentPlaceOfWork';
 export const deleteCurrentPlaceOfWorkActionIntent = 'deleteCurrentPlaceOfWork';
@@ -128,23 +130,21 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 	}
 
 	// // Remove http:// from websiteUrl
-	if (userProfile.currentPlaceOfWork?.websiteUrl) {
-		userProfile.currentPlaceOfWork.websiteUrl = userProfile.currentPlaceOfWork?.websiteUrl?.replace('http://', '');
-	}
+	const websiteUrl = cleanUrl(userProfile.currentPlaceOfWork?.websiteUrl);
 
-	return { userProfile };
+	return { ...userProfile, currentPlaceOfWork: { ...userProfile.currentPlaceOfWork, websiteUrl } };
 }
 
 export default function Profile() {
-	const { userProfile } = useLoaderData<typeof loader>();
+	const { currentPlaceOfWork } = useLoaderData<typeof loader>();
 	const { isCurrentUserProfile, isViewAsPublic } = useOutletContext<Outlet>();
 
 	return (
 		<main className="mx-auto mt-6 h-screen max-w-5xl px-4 sm:px-6 lg:px-8">
 			{!isCurrentUserProfile || isViewAsPublic ? (
-				<UserPublicProfileView currentPlaceOfWork={userProfile.currentPlaceOfWork} />
+				<UserPublicProfileView currentPlaceOfWork={currentPlaceOfWork} />
 			) : (
-				<UserEditProfileView currentPlaceOfWork={userProfile.currentPlaceOfWork} />
+				<UserEditProfileView currentPlaceOfWork={currentPlaceOfWork} />
 			)}
 		</main>
 	);
